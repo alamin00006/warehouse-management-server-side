@@ -28,7 +28,7 @@ async function run() {
       })
 
           // get a computer
-          app.get('/computer/:id', async(req, res) =>{
+          app.get('/computers/:id', async(req, res) =>{
             const id = req.params.id;
             
             const query = {_id:ObjectId(id)};
@@ -38,7 +38,18 @@ async function run() {
 
         })
 
-        app.delete('/computer/:id', async(req, res) =>{
+
+        app.get('/computers', async(req, res) =>{
+            const email = req.query.email;
+            console.log(email)
+           const query = {userEmail: email};
+           console.log(query)
+            const cursor = computerCollection.find(query);
+            const service = await  cursor.toArray();
+            res.send(service)
+        })
+
+        app.delete('/computers/:id', async(req, res) =>{
             const id = req.params.id;
             const query = {_id:ObjectId(id)};
             const result =await computerCollection.deleteOne(query);
@@ -55,22 +66,43 @@ async function run() {
           })
     
 
-        app.put('/computer/:id', async(req, res) =>{
+          app.put('/computers/:id', async(req, res) =>{
             const id = req.params.id;
-            const updateQuantity = req.body;
-            console.log(updateQuantity)
-            const filter = {_id:ObjectId(id)};
-            const options = {upsert: true};
-            const updatedQuantity = {
-                $set:{
-                    quantity: updateQuantity.quantity
+            const updatedQuantity = req.body;
+            console.log(updatedQuantity)
+            const filter = {_id: ObjectId(id)};
+            const options = { upsert: true };
+            const updatedFinal = {
+                $set: {
+                   quantity:updatedQuantity.quantity
                 }
-            }
-            const result =await computerCollection.updateOne(filter, updatedQuantity, options);
-            res.send(result)
-            
+            };
+          
+            console.log(updatedFinal)
+            const result = await computerCollection.updateOne(filter,updatedFinal, options);
+            res.send(result);
 
         })
+
+// add new quantity
+
+app.put('/computers/:id', async(req, res) =>{
+    const id = req.params.id;
+    const updatedQuantity = req.body;
+    // console.log(updatedQuantity)
+    const filter = {_id: ObjectId(id)};
+    const options = { upsert: true };
+    const updatedFinal = {
+        $set: {
+           quantity:updatedQuantity.quantity
+        }
+    };
+  
+    console.log(updatedFinal)
+    const result = await computerCollection.updateOne(filter,updatedFinal, options);
+    res.send(result);
+
+})
 
 
     }
