@@ -28,6 +28,11 @@ async function run() {
         res.send(computers);
       })
 
+      app.get('/test', async(req, res) =>{
+       
+        res.send('test me');
+      })
+
           // get a computer
           app.get('/computers/:id', async(req, res) =>{
             const id = req.params.id;
