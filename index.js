@@ -7,10 +7,6 @@ require('dotenv').config();
 
 app.use(express.json());
 app.use(cors());
-// alamin0
-// nNGTwvvlahg68p4G
-
-
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PAS}@cluster0.v5jnc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
@@ -47,16 +43,15 @@ async function run() {
 
         app.get('/computers', async(req, res) =>{
             const email = req.query.email;
-            console.log(email)
-           const query = {userEmail: email};
-           console.log(query)
-            const cursor = computerCollection.find(query);
-            const service = await  cursor.toArray();
-            res.send(service)
+            const query = {email : email};
+           const cursor = computerCollection.find(query);
+            const myItems = await cursor.toArray();
+            res.send(myItems)
         })
 
         app.delete('/computers/:id', async(req, res) =>{
             const id = req.params.id;
+            console.log(id)
             const query = {_id:ObjectId(id)};
             const result =await computerCollection.deleteOne(query);
            
